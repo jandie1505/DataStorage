@@ -179,6 +179,24 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
         return sections;
     }
 
+    /**
+     * Returns a DataStorage only containing values from the first level (no subsections).<br/>
+     * Example:<br/>
+     * - 'exampleSection.exampleValue' -> Not on the top level<br/>
+     * - 'exampleValue' -> On the top level<br/>
+     * @return data storage
+     */
+    public DataStorage getTopLevelEntryStorage() {
+        DataStorage currentLevelSection = new DataStorage();
+
+        for (Map.Entry<String, Object> entry : this.storage.entrySet()) {
+            if (entry.getKey().contains(".")) continue;
+            currentLevelSection.set(entry.getKey(), entry.getValue());
+        }
+
+        return currentLevelSection;
+    }
+
     // --- MERGE ---
 
     /**

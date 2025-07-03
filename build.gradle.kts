@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.json:json:20250517")
     compileOnly("org.jetbrains:annotations:24.0.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
