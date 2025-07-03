@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.jandie1505"
-version = "1.0-SNAPSHOT"
+version = "1.0-RELEASE"
 
 repositories {
     mavenLocal()
