@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"Alle Packages","u":"allpackages-index.html"},{"l":"net.jandie1505.datastorage"},{"l":"net.jandie1505.datastorage.serialization"}];updateSearchResults();

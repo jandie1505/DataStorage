@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"Alle Klassen und Schnittstellen","u":"allclasses-index.html"},{"p":"net.jandie1505.datastorage","l":"DataStorage"},{"p":"net.jandie1505.datastorage.serialization","l":"DSJsonSerializer"}];updateSearchResults();
