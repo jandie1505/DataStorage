@@ -46,9 +46,10 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     // --- SECTIONS ---
 
     /**
-     * Gets a subsection from the DataStorage as a new DataStorage.
+     * Gets a subsection from the DataStorage as a new DataStorage.<br/>
+     * The returned section is independent and <b>not</b> linked to this DataStorage object.
      * @param key key
-     * @return subsection
+     * @return independent subsection
      */
     @NotNull IDataStorage getSection(@NotNull String key);
 
@@ -71,8 +72,9 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     void mergeSection(@NotNull String key, @NotNull IDataStorage section);
 
     /**
-     * Returns all sections of the DataStorage.
-     * @return map of sections
+     * Returns all sections of the DataStorage.<br/>
+     * The returned sections are independent and <b>not</b> linked to this DataStorage object.
+     * @return map of independent sections
      */
     Map<String, IDataStorage> getSections();
 
@@ -81,6 +83,7 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
      * Example:<br/>
      * - 'exampleSection.exampleValue' -> Not on the top level<br/>
      * - 'exampleValue' -> On the top level<br/>
+     * The returned section is independent and <b>not</b> linked to this DataStorage object.
      * @return data storage
      */
     IDataStorage getTopLevelEntryStorage();

@@ -25,6 +25,11 @@ public class DataStorage implements IDataStorage {
         this.storage = new HashMap<>();
     }
 
+    public DataStorage(@NotNull IDataStorage section) {
+        this();
+        this.merge(section, true);
+    }
+
     /**
      * Creates a DatStorage from the specified map.
      * @param storage data storage
