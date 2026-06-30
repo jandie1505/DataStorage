@@ -92,6 +92,16 @@ public class ConcurrentDataStorage implements IDataStorage {
         }
     }
 
+    @Override
+    public final int size() {
+        this.lock.readLock().lock();
+        try {
+            return this.delegate.size();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
     // ----- SECTIONS -----
 
     /**

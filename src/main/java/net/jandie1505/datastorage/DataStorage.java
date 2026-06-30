@@ -119,6 +119,11 @@ public class DataStorage implements IDataStorage {
         this.storage.clear();
     }
 
+    @Override
+    public final int size() {
+        return this.storage.size();
+    }
+
     // --- SECTIONS ---
 
     /**

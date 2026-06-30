@@ -46,6 +46,12 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
      */
     void clear();
 
+    /**
+     * Returns the size of the config.
+     * @return size
+     */
+    int size();
+
     // --- SECTIONS ---
 
     /**
