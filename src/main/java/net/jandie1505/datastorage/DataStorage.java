@@ -15,7 +15,7 @@ import java.util.Set;
  * DataStorage uses a section format, which means Section1.Section2.Section3.
  * Section2 is a subsection of Section1. Subsections can be extracted, sections can be merged into this DataStorage as subsections or directly.
  */
-public class DataStorage implements Iterable<Map.Entry<String, Object>> {
+public class DataStorage implements IDataStorage {
     @NotNull private final Map<String, Object> storage;
 
     /**
@@ -33,7 +33,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
         this();
 
         for (Map.Entry<?, ?> entry : storage.entrySet()) {
-            this.storage.put(entry.getKey().toString(), DataStorage.convertObject(entry.getValue()));
+            this.storage.put(entry.getKey().toString(), IDataStorage.convertObject(entry.getValue()));
         }
 
     }
@@ -71,7 +71,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
             return;
         }
 
-        if (value instanceof DataStorage s) {
+        if (value instanceof IDataStorage s) {
             this.mergeSection(key, s);
             return;
         }
@@ -81,7 +81,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
             return;
         }
 
-        this.storage.put(key, convertObject(value));
+        this.storage.put(key, IDataStorage.convertObject(value));
     }
 
     /**
@@ -140,8 +140,8 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * @param section section
      * @param overwrite when true, existing values will be replaced (recommended)
      */
-    public void mergeSection(@NotNull String key, @NotNull DataStorage section, boolean overwrite) {
-        for (Map.Entry<String, Object> entry : section.storage.entrySet()) {
+    public void mergeSection(@NotNull String key, @NotNull IDataStorage section, boolean overwrite) {
+        for (Map.Entry<String, Object> entry : section.entrySet()) {
             String sectionKey = entry.getKey();
             Object value = entry.getValue();
 
@@ -159,7 +159,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * @param key key
      * @param section section
      */
-    public void mergeSection(@NotNull String key, @NotNull DataStorage section) {
+    public void mergeSection(@NotNull String key, @NotNull IDataStorage section) {
         this.mergeSection(key, section, true);
     }
 
@@ -167,8 +167,8 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * Returns all sections of the DataStorage.
      * @return map of sections
      */
-    public Map<String, DataStorage> getSections() {
-        Map<String, DataStorage> sections = new HashMap<>();
+    public Map<String, IDataStorage> getSections() {
+        Map<String, IDataStorage> sections = new HashMap<>();
 
         for (String key : this.storage.keySet()) {
             String[] sectionKey  = key.split("\\.");
@@ -204,7 +204,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * @param other other data storage
      * @param overwrite when true, existing values will be replaced (recommended)
      */
-    public void merge(@NotNull DataStorage other, boolean overwrite) {
+    public void merge(@NotNull IDataStorage other, boolean overwrite) {
         for (Map.Entry<String, Object> entry : other) {
             if (!overwrite && this.storage.containsKey(entry.getKey())) continue;
             this.set(entry.getKey(), entry.getValue());
@@ -216,7 +216,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * This method has "overwrite" set to true.
      * @param other other data storage
      */
-    public void merge(@NotNull DataStorage other) {
+    public void merge(@NotNull IDataStorage other) {
         this.merge(other, true);
     }
 
@@ -252,125 +252,6 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
         return this.asMap().entrySet();
     }
 
-    // --- GET SPECIFIC TYPES ---
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public int optInt(@NotNull String key, int defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Integer v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public long optLong(@NotNull String key, long defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Long v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public double optDouble(@NotNull String key, double defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Double v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public float optFloat(@NotNull String key, float defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Float v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public boolean optBoolean(@NotNull String key, boolean defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Boolean v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public String optString(@NotNull String key, @Nullable String defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof String v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public byte optByte(@NotNull String key, byte defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Byte v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public short optShort(@NotNull String key, short defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Short v) return v;
-        return defaultValue;
-    }
-
-    /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
-     * @param key key
-     * @param defaultValue default value
-     * @return value
-     */
-    public char optChar(@NotNull String key, char defaultValue) {
-        Object value = this.storage.get(key);
-        if (value instanceof Character v) return v;
-        return defaultValue;
-    }
-
     // --- CLONE ---
 
     /**
@@ -378,6 +259,7 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * Since all values of it are immutable, the data has not to be copied.
      * @return cloned DataStorage
      */
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public DataStorage clone() {
         DataStorage storage = new DataStorage();
@@ -392,22 +274,11 @@ public class DataStorage implements Iterable<Map.Entry<String, Object>> {
      * This is normally used internally.
      * @param o object
      * @return converted object
+     * @deprecated This is now located in {@link IDataStorage#convertObject(Object)}.
      */
-    @NotNull
-    public static Object convertObject(@NotNull Object o) {
-
-        return switch (o) {
-            case Integer i -> i;
-            case Long l -> l;
-            case Double d -> d;
-            case Float f -> f;
-            case Boolean b -> b;
-            case String s -> s;
-            case Byte b -> b;
-            case Short s -> s;
-            case Character c -> c;
-            default -> o.toString();
-        };
-
+    @Deprecated
+    public static @NotNull Object convertObject(@NotNull Object o) {
+        return IDataStorage.convertObject(o);
     }
+
 }

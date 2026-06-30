@@ -1,6 +1,7 @@
 package net.jandie1505.datastorage.serialization;
 
 import net.jandie1505.datastorage.DataStorage;
+import net.jandie1505.datastorage.IDataStorage;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ public final class DSJsonSerializer {
      * @param storage storage
      * @return yaml configuration
      */
-    public static JSONObject serialize(@NotNull DataStorage storage) {
+    public static JSONObject serialize(@NotNull IDataStorage storage) {
         JSONObject config = new JSONObject();
 
         // Add values
@@ -33,7 +34,7 @@ public final class DSJsonSerializer {
         }
 
         // Sections
-        for (Map.Entry<String, DataStorage> entry : storage.getSections().entrySet()) {
+        for (Map.Entry<String, IDataStorage> entry : storage.getSections().entrySet()) {
 
             if (storage.get(entry.getKey()) != null) {
                 throw new IllegalStateException("Key " +  entry.getKey() + " is used as value key and section key for the same time. JSON does not support that.");
