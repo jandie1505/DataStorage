@@ -25,6 +25,10 @@ public class DataStorage implements IDataStorage {
         this.storage = new HashMap<>();
     }
 
+    /**
+     * Creates a new DataStorage from another DataStorage.
+     * @param section DataStorage to clone
+     */
     public DataStorage(@NotNull IDataStorage section) {
         this();
         this.merge(section, true);

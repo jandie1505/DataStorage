@@ -6,6 +6,14 @@ plugins {
 group = "net.jandie1505"
 version = "1.0-RELEASE"
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -16,6 +24,8 @@ dependencies {
     compileOnly("org.jetbrains:annotations:24.0.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.json:json:20250517")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {

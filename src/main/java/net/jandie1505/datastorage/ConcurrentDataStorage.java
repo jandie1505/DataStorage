@@ -9,13 +9,28 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * A thread-safe version of the {@link DataStorage}.
+ */
 public class ConcurrentDataStorage implements IDataStorage {
     @NotNull private final DataStorage delegate;
     @NotNull private final ReadWriteLock lock;
 
+    /**
+     * Creates a new empty ConcurrentDataStorage.
+     */
     public ConcurrentDataStorage() {
         this.delegate = new DataStorage();
         this.lock = new ReentrantReadWriteLock();
+    }
+
+    /**
+     * Creates a new ConcurrentDataStorage from another DataStorage.
+     * @param storage DataStorage to clone
+     */
+    public ConcurrentDataStorage(@NotNull IDataStorage storage) {
+        this();
+        this.delegate.merge(storage, true);
     }
 
     /**
@@ -28,11 +43,6 @@ public class ConcurrentDataStorage implements IDataStorage {
         for (Map.Entry<?, ?> entry : storage.entrySet()) {
             this.delegate.set(entry.getKey().toString(), entry.getValue());
         }
-    }
-
-    public ConcurrentDataStorage(@NotNull DataStorage storage) {
-        this();
-        this.delegate.merge(storage, true);
     }
 
     // ----- BASIC OPERATIONS -----

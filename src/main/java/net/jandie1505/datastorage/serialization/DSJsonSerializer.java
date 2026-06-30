@@ -57,13 +57,14 @@ public final class DSJsonSerializer {
     public static DataStorage deserialize(@NotNull JSONObject config) {
         DataStorage storage = new DataStorage();
 
-        for (Map.Entry<String, Object> entry : config.toMap().entrySet()) {
+        for (String key : config.keySet()) {
+            Object value = config.get(key);
 
             // JSON Objects need to be merged as subsections
-            if (entry.getValue() instanceof JSONObject jsonObject) {
-                storage.mergeSection(entry.getKey(), deserialize(jsonObject));
+            if (value instanceof JSONObject jsonObject) {
+                storage.mergeSection(key, deserialize(jsonObject));
             } else {
-                storage.set(entry.getKey(), entry.getValue());
+                storage.set(key, value);
             }
 
         }
