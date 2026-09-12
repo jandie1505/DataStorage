@@ -39,10 +39,7 @@ public class ConcurrentDataStorage implements IDataStorage {
      */
     public ConcurrentDataStorage(@NotNull Map<?, ?> storage) {
         this();
-
-        for (Map.Entry<?, ?> entry : storage.entrySet()) {
-            this.delegate.set(entry.getKey().toString(), entry.getValue());
-        }
+        this.delegate.merge(new DataStorage(storage), true);
     }
 
     // ----- BASIC OPERATIONS -----
@@ -57,6 +54,7 @@ public class ConcurrentDataStorage implements IDataStorage {
     }
 
     public final void set(@NotNull String key, @Nullable Object value) {
+        if (value instanceof ConcurrentDataStorage s) value = new DataStorage(s);
         this.lock.writeLock().lock();
         try {
             this.delegate.set(key, value);
@@ -264,7 +262,7 @@ public class ConcurrentDataStorage implements IDataStorage {
     public ConcurrentDataStorage clone() {
         this.lock.readLock().lock();
         try {
-            return new ConcurrentDataStorage(this.delegate.clone());
+            return new ConcurrentDataStorage(this.delegate);
         } finally {
             this.lock.readLock().unlock();
         }

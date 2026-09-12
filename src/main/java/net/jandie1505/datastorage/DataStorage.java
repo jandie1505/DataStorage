@@ -42,9 +42,8 @@ public class DataStorage implements IDataStorage {
         this();
 
         for (Map.Entry<?, ?> entry : storage.entrySet()) {
-            this.storage.put(entry.getKey().toString(), IDataStorage.convertObject(entry.getValue()));
+            this.set(entry.getKey().toString(), entry.getValue());
         }
-
     }
 
     // --- BASIC OPERATIONS ---
