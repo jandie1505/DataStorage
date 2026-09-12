@@ -54,7 +54,7 @@ public class ConcurrentDataStorage implements IDataStorage {
     }
 
     public final void set(@NotNull String key, @Nullable Object value) {
-        if (value instanceof ConcurrentDataStorage s) value = new DataStorage(s);
+        if (value instanceof IDataStorage s) value = new DataStorage(s);
         this.lock.writeLock().lock();
         try {
             this.delegate.set(key, value);
