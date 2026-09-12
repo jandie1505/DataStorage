@@ -105,7 +105,7 @@ public final class DSJsonSerializer {
      * @param indentFactor See {@link JSONObject#toString(int)}.
      * @throws IOException file error
      */
-    public static void saveConfig(@NotNull DataStorage storage, @NotNull Path path, int indentFactor) throws IOException {
+    public static void saveConfig(@NotNull IDataStorage storage, @NotNull Path path, int indentFactor) throws IOException {
         if (Files.notExists(path.getParent())) {
             Files.createDirectories(path.getParent());
         }
@@ -127,7 +127,7 @@ public final class DSJsonSerializer {
      * @param indentFactor See {@link JSONObject#toString(int)}.
      * @throws IOException file error
      */
-    public static void saveConfig(@NotNull DataStorage storage, @NotNull File file, int indentFactor) throws IOException {
+    public static void saveConfig(@NotNull IDataStorage storage, @NotNull File file, int indentFactor) throws IOException {
         saveConfig(storage, file.toPath(), indentFactor);
     }
 
