@@ -3,10 +3,8 @@ package net.jandie1505.datastorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * A DataStorage stores data.<br/>
@@ -103,7 +101,7 @@ public class DataStorage implements IDataStorage {
     }
 
     /**
-     * Converts the data storage to an unmodifiable map and returns it.
+     * Returns a snapshot from the internal map.
      * @return map
      */
     @NotNull
@@ -242,7 +240,7 @@ public class DataStorage implements IDataStorage {
     @Override
     @NotNull
     public Iterator<Map.Entry<String, Object>> iterator() {
-        return this.asMap().entrySet().iterator();
+        return new DSEntryIterator(this.storage.entrySet().iterator());
     }
 
     // --- SETS ---
@@ -262,7 +260,15 @@ public class DataStorage implements IDataStorage {
      */
     @NotNull
     public Set<Map.Entry<String, Object>> entrySet() {
-        return this.asMap().entrySet();
+        return new DSEntrySet(this.storage);
+    }
+
+    /**
+     * Returns a map linked to the DataStorage (not a copy)!
+     * @return map linked to the DataStorage
+     */
+    public Map<String, Object> map() {
+        return new DSMap(this.storage);
     }
 
     // --- CLONE ---
@@ -278,6 +284,17 @@ public class DataStorage implements IDataStorage {
         DataStorage storage = new DataStorage();
         storage.storage.putAll(this.storage);
         return storage;
+    }
+
+    // --- INTERNAL ACCESS ---
+
+    /**
+     * Returns the internal storage.<br/>
+     * Use with caution!
+     * @return internal storage
+     */
+    protected final @NotNull Map<String, Object> storage() {
+        return this.storage;
     }
 
     // --- STATIC ---
