@@ -100,13 +100,19 @@ public class DataStorage implements IDataStorage {
         return this.storage.remove(key);
     }
 
+    public final @NotNull Map<String, Object> snapshotMap() {
+        return Map.copyOf(this.storage);
+    }
+
     /**
      * Returns a snapshot from the internal map.
      * @return map
+     * @deprecated Use {@link #snapshotMap()}
      */
     @NotNull
+    @Deprecated
     public final Map<String, Object> asMap() {
-        return Map.copyOf(this.storage);
+        return this.snapshotMap();
     }
 
     /**
@@ -239,7 +245,7 @@ public class DataStorage implements IDataStorage {
      */
     @Override
     @NotNull
-    public Iterator<Map.Entry<String, Object>> iterator() {
+    public DSEntryIterator iterator() {
         return new DSEntryIterator(this.storage.entrySet().iterator());
     }
 
@@ -259,7 +265,7 @@ public class DataStorage implements IDataStorage {
      * @return entry set
      */
     @NotNull
-    public Set<Map.Entry<String, Object>> entrySet() {
+    public DSEntrySet entrySet() {
         return new DSEntrySet(this.storage);
     }
 
@@ -267,7 +273,8 @@ public class DataStorage implements IDataStorage {
      * Returns a map linked to the DataStorage (not a copy)!
      * @return map linked to the DataStorage
      */
-    public Map<String, Object> map() {
+    @Override
+    public @NotNull DSMap map() {
         return new DSMap(this.storage);
     }
 

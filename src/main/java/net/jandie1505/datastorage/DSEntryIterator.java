@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * Iterator for DataStorage iterators which returns {@link DSEntry} instead of the internal {@link Map.Entry}.
  */
-public class DSEntryIterator implements Iterator<Map.Entry<String, Object>> {
+public final class DSEntryIterator implements Iterator<Map.Entry<String, Object>> {
     @NotNull private final Iterator<Map.Entry<String, Object>> delegate;
 
     /**
@@ -26,7 +26,7 @@ public class DSEntryIterator implements Iterator<Map.Entry<String, Object>> {
     }
 
     @Override
-    public Map.Entry<String, Object> next() {
+    public DSEntry next() {
         return new DSEntry(this.delegate.next());
     }
 

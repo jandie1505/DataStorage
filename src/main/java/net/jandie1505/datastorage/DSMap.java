@@ -4,12 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A linked map for {@link DataStorage}.
  */
-public class DSMap extends AbstractMap<String, Object> {
+public final class DSMap extends AbstractMap<String, Object> {
     @NotNull private final Map<String, Object> internalMap;
 
     /**
@@ -21,7 +20,7 @@ public class DSMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    public @NotNull Set<Entry<String, Object>> entrySet() {
+    public @NotNull DSEntrySet entrySet() {
         return new DSEntrySet(this.internalMap);
     }
 

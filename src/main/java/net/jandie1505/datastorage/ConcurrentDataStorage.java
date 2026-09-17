@@ -72,13 +72,37 @@ public class ConcurrentDataStorage implements IDataStorage {
         }
     }
 
-    public final @NotNull Map<String, Object> asMap() {
+    /**
+     * Returns a copy of this DataStorage
+     * @return modifiable copy
+     */
+    public final @NotNull DataStorage snapshot() {
         this.lock.readLock().lock();
         try {
-            return this.delegate.asMap();
+            return new DataStorage(this.delegate);
         } finally {
             this.lock.readLock().unlock();
         }
+    }
+
+    /**
+     * Returns a copy of the internal map of this storage.
+     * @return copy of the storage map
+     */
+    @Override
+    public final @NotNull Map<String, Object> snapshotMap() {
+        this.lock.readLock().lock();
+        try {
+            return this.delegate.snapshotMap();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    @Deprecated
+    @Override
+    public final @NotNull Map<String, Object> asMap() {
+        return this.snapshotMap();
     }
 
     public final void clear() {
@@ -215,7 +239,7 @@ public class ConcurrentDataStorage implements IDataStorage {
     public @NotNull Iterator<Map.Entry<String, Object>> iterator() {
         this.lock.readLock().lock();
         try {
-            return this.delegate.iterator();
+            return new CDSEntryIterator(this.delegate.iterator(), this.lock);
         } finally {
             this.lock.readLock().unlock();
         }
@@ -231,7 +255,7 @@ public class ConcurrentDataStorage implements IDataStorage {
     public Set<String> keySet() {
         this.lock.readLock().lock();
         try {
-            return this.delegate.keySet();
+            return this.map().keySet();
         } finally {
             this.lock.readLock().unlock();
         }
@@ -244,7 +268,21 @@ public class ConcurrentDataStorage implements IDataStorage {
     public @NotNull Set<Map.Entry<String, Object>> entrySet() {
         this.lock.readLock().lock();
         try {
-            return this.delegate.entrySet();
+            return new CDSEntrySet(this.delegate.entrySet(), this.lock);
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns a linked map of this storage.
+     * @return linked map
+     */
+    @Override
+    public @NotNull CDSMap map() {
+        this.lock.readLock().lock();
+        try {
+            return new CDSMap(this.delegate.map(), this.lock);
         } finally {
             this.lock.readLock().unlock();
         }

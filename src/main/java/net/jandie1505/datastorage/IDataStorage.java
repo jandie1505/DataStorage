@@ -36,10 +36,17 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     @Nullable Object remove(String key);
 
     /**
+     * Creates and returns a snapshot (copy) of the current internal map.
+     * @return snapshot map
+     */
+    @NotNull Map<String, Object> snapshotMap();
+
+    /**
      * Converts the data storage to an unmodifiable map and returns it.
      * @return map
+     * @deprecated Use {@link #snapshotMap()}
      */
-    @NotNull Map<String, Object> asMap();
+    @Deprecated @NotNull Map<String, Object> asMap();
 
     /**
      * Clears the data storage.
@@ -126,6 +133,12 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
      * @return entry set
      */
     @NotNull Set<Map.Entry<String, Object>> entrySet();
+
+    /**
+     * Returns a linked map of this storage.
+     * @return linked map
+     */
+    @NotNull Map<String, Object> map();
 
     // --- GET SPECIFIC TYPES ---
 

@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * A wrapper for an Entry of DataStorage which prevents adding unallowed values to the DataStorage.
  */
-public class DSEntry implements Map.Entry<String, Object> {
+public final class DSEntry implements Map.Entry<String, Object> {
     @NotNull private final Map.Entry<String, Object> delegate;
 
     /**
@@ -35,4 +35,13 @@ public class DSEntry implements Map.Entry<String, Object> {
         return this.delegate.setValue(IDataStorage.convertObject(value));
     }
 
+    @Override
+    public int hashCode() {
+        return this.delegate.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.delegate.equals(obj);
+    }
 }

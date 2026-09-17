@@ -3,13 +3,12 @@ package net.jandie1505.datastorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractSet;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * An entry set for DataStorage.
  */
-public class DSEntrySet extends AbstractSet<Map.Entry<String, Object>> {
+public final class DSEntrySet extends AbstractSet<Map.Entry<String, Object>> {
     @NotNull private final Map<String, Object> internalMap;
 
     /**
@@ -21,7 +20,7 @@ public class DSEntrySet extends AbstractSet<Map.Entry<String, Object>> {
     }
 
     @Override
-    public @NotNull Iterator<Map.Entry<String, Object>> iterator() {
+    public @NotNull DSEntryIterator iterator() {
         return new DSEntryIterator(this.internalMap.entrySet().iterator());
     }
 
