@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * A thread-safe version of the {@link DataStorage}.
@@ -283,6 +285,34 @@ public class ConcurrentDataStorage implements IDataStorage {
         } finally {
             this.lock.readLock().unlock();
         }
+    }
+
+    // --- LOCK ---
+
+    /**
+     * Runs code under the ConcurrentDataStorage's write lock.<br/>
+     * WARNING! Risk of deadlocks. DO NOT USE other {@link ConcurrentDataStorage}s inside it. It WILL deadlock.
+     * @param action action to run
+     */
+    public final <T> T runExclusive(@NotNull Function<@NotNull ConcurrentDataStorage, T> action) {
+        this.lock.writeLock().lock();
+        try {
+            return action.apply(this);
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Runs code under the ConcurrentDataStorage's write lock.<br/>
+     * WARNING! Risk of deadlocks. DO NOT USE other {@link ConcurrentDataStorage}s inside it. It WILL deadlock.
+     * @param action action to run
+     */
+    public final void runExclusive(@NotNull Consumer<ConcurrentDataStorage> action) {
+        this.runExclusive(s -> {
+            action.accept(s);
+            return null;
+        });
     }
 
 }
