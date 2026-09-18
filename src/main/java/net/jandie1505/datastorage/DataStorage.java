@@ -103,11 +103,11 @@ public class DataStorage implements IDataStorage {
     }
 
     /**
-     * Converts the data storage to an unmodifiable map and returns it.
-     * @return map
+     * Returns a snapshot (copy) of the internal map.
+     * @return snapshot of the internal map
      */
     @NotNull
-    public final Map<String, Object> asMap() {
+    public final Map<String, Object> snapshotMap() {
         return Map.copyOf(this.storage);
     }
 
@@ -242,7 +242,7 @@ public class DataStorage implements IDataStorage {
     @Override
     @NotNull
     public Iterator<Map.Entry<String, Object>> iterator() {
-        return this.asMap().entrySet().iterator();
+        return this.snapshotMap().entrySet().iterator();
     }
 
     // --- SETS ---
@@ -253,7 +253,7 @@ public class DataStorage implements IDataStorage {
      */
     @NotNull
     public Set<String> keySet() {
-        return this.asMap().keySet();
+        return this.snapshotMap().keySet();
     }
 
     /**
@@ -262,7 +262,7 @@ public class DataStorage implements IDataStorage {
      */
     @NotNull
     public Set<Map.Entry<String, Object>> entrySet() {
-        return this.asMap().entrySet();
+        return this.snapshotMap().entrySet();
     }
 
     // --- CLONE ---
@@ -278,6 +278,17 @@ public class DataStorage implements IDataStorage {
         DataStorage storage = new DataStorage();
         storage.storage.putAll(this.storage);
         return storage;
+    }
+
+    // --- INTERNAL ACCESS ---
+
+    /**
+     * Returns the internal storage.<br/>
+     * Use with caution!
+     * @return internal storage
+     */
+    protected final @NotNull Map<String, Object> storage() {
+        return this.storage;
     }
 
     // --- STATIC ---

@@ -72,10 +72,27 @@ public class ConcurrentDataStorage implements IDataStorage {
         }
     }
 
-    public final @NotNull Map<String, Object> asMap() {
+    /**
+     * Returns a snapshot of this DataStorage.
+     * @return snapshot
+     */
+    public final @NotNull DataStorage snapshot() {
         this.lock.readLock().lock();
         try {
-            return this.delegate.asMap();
+            return this.delegate.clone();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns a snapshot (copy) of the internal map.
+     * @return snapshot of the internal map
+     */
+    public final @NotNull Map<String, Object> snapshotMap() {
+        this.lock.readLock().lock();
+        try {
+            return this.delegate.snapshotMap();
         } finally {
             this.lock.readLock().unlock();
         }
