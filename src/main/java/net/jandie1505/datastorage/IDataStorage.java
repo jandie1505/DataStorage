@@ -140,8 +140,9 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     // --- GET SPECIFIC TYPES ---
 
     /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
+     * Returns an int from the storage.<br/>
+     * It tries to convert other integer types such as long and short to int.<br/>
+     * If the int does not exist or the conversion fails, the default value is returned.<br/>
      * @param key key
      * @param defaultValue default value
      * @return value
@@ -149,12 +150,21 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     default int optInt(@NotNull String key, int defaultValue) {
         Object value = this.get(key);
         if (value instanceof Integer v) return v;
+
+        if (value instanceof Short s) return s;
+        if (value instanceof Long l) {
+            if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
+                return (int) l.longValue();
+            }
+        }
+
         return defaultValue;
     }
 
     /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
+     * Returns a long from the storage.<br/>
+     * It tries to convert other integer types like integers or shorts to long,<br/>
+     * If the long does not exist or the conversion fails, the default value is returned.
      * @param key key
      * @param defaultValue default value
      * @return value
@@ -162,12 +172,17 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     default long optLong(@NotNull String key, long defaultValue) {
         Object value = this.get(key);
         if (value instanceof Long v) return v;
+
+        if (value instanceof Integer i) return i;
+        if (value instanceof Short s) return s;
+
         return defaultValue;
     }
 
     /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
+     * Returns a double from the storage.<br/>
+     * It tries to convert other decimal types such as floats to double.<br/>
+     * If the double does not exist or the conversion fails, the default value is returned.
      * @param key key
      * @param defaultValue default value
      * @return value
@@ -175,12 +190,14 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     default double optDouble(@NotNull String key, double defaultValue) {
         Object value = this.get(key);
         if (value instanceof Double v) return v;
+        if (value instanceof Float f) return f;
         return defaultValue;
     }
 
     /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
+     * Returns a float from the storage.<br/>
+     * It tries to convert other decimal types such as double to float.<br/>
+     * If the float does not exist or the conversion fails, the default value is returned.
      * @param key key
      * @param defaultValue default value
      * @return value
@@ -188,6 +205,17 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     default float optFloat(@NotNull String key, float defaultValue) {
         Object value = this.get(key);
         if (value instanceof Float v) return v;
+
+        if (value instanceof Double d) {
+            float f = (float) d.doubleValue();
+
+            if (Double.isNaN(d) || Double.isInfinite(d)) return f;
+            if (Float.isInfinite(f)) return defaultValue; // Overflow
+            if (f == 0.0f && d != 0.0d) return defaultValue; // Underflow
+
+            return f;
+        }
+
         return defaultValue;
     }
 
@@ -231,8 +259,9 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     }
 
     /**
-     * Returns the specific type from the storage.<br/>
-     * If the specific type does not exist, the default value is returned.
+     * Returns a short from the storage.<br/>
+     * It tries to convert other integer types to short.<br/>
+     * If the short does not exist or the conversion fails, the default value is returned.
      * @param key key
      * @param defaultValue default value
      * @return value
@@ -240,6 +269,19 @@ public interface IDataStorage extends Iterable<Map.Entry<String, Object>> {
     default short optShort(@NotNull String key, short defaultValue) {
         Object value = this.get(key);
         if (value instanceof Short v) return v;
+
+        if (value instanceof Long l) {
+            if (l >= Short.MIN_VALUE && l <= Short.MAX_VALUE) {
+                return (short) l.longValue();
+            }
+        }
+
+        if (value instanceof Integer i) {
+            if (i >= Short.MIN_VALUE && i <= Short.MAX_VALUE) {
+                return (short) i.intValue();
+            }
+        }
+
         return defaultValue;
     }
 
