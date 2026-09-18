@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.jandie1505"
-version = "1.1-RELEASE"
+version = "1.2-RELEASE"
 
 java {
     toolchain {
