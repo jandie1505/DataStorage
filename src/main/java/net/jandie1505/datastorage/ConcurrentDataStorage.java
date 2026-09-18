@@ -293,6 +293,8 @@ public class ConcurrentDataStorage implements IDataStorage {
      * Runs code under the ConcurrentDataStorage's write lock.<br/>
      * WARNING! Risk of deadlocks. DO NOT USE other {@link ConcurrentDataStorage}s inside it. It WILL deadlock.
      * @param action action to run
+     * @param <T> return type
+     * @return return value
      */
     public final <T> T runExclusive(@NotNull Function<@NotNull ConcurrentDataStorage, T> action) {
         this.lock.writeLock().lock();

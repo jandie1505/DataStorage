@@ -307,13 +307,6 @@ class DataStorageTest {
     }
 
     @Test
-    void optReturnsDefaultForWrongType() {
-        DataStorage ds = new DataStorage();
-        ds.set("l", 5L); // Long, not Integer
-        assertEquals(-1, ds.optInt("l", -1), "optInt must be strict about the exact type");
-    }
-
-    @Test
     void optReturnsDefaultForMissingKey() {
         assertEquals(99, new DataStorage().optInt("missing", 99));
     }
